@@ -18,7 +18,7 @@ The ZOffset parameter will rise up/down the Spline on Z axis
 
 ![alt text](https://user-images.githubusercontent.com/484208/27292839-e04bd114-5514-11e7-805e-3393c59330b3.png)
 
-The IncludeLastChunk boolean will allow to add (or not) a SplineMeshComponent at the end of the Spline, this is useful in case you have some stuff attack at the end position and you don't want to overlap the SplineMesh with it.
+The IncludeLastChunk boolean will allow to add (or not) a SplineMeshComponent at the end of the Spline, this is useful in case you have some stuff attached at the end position and you don't want to overlap the SplineMesh with it (like the red circle in the first picture).
 
 ![alt text](https://user-images.githubusercontent.com/484208/27292778-bd055c48-5514-11e7-9938-e2a4cf629236.png)
 

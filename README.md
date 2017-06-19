@@ -24,7 +24,7 @@ The IncludeLastChunk boolean will allow to add (or not) a SplineMeshComponent at
 
 ![alt text](https://user-images.githubusercontent.com/484208/27292791-c32e02aa-5514-11e7-954d-cbd9bf6b1645.png)
 
-Here an example use of the component, as you can see the CreateSplineMeshV function is called on Tick, the function destroy and recreate the Spline and it looks like we are adding/removing chunks at runtime, BE CAREFUL and DON'T use a low ChunkLength value to prevent performance issue! With a value > 25.f we have a god effect with no fps drops.
+Here an example use of the component, as you can see the CreateSplineMeshV function is called on Tick, the function destroy and recreate the Spline and it looks like we are adding/removing chunks at runtime, BE CAREFUL and DON'T use a low ChunkLength value to prevent performance issue! With a value > 25.f we have a good effect with no fps drops.
 
 ![alt text](https://user-images.githubusercontent.com/484208/27293255-26b3be54-5516-11e7-8fca-e5ad187dc267.PNG)
 

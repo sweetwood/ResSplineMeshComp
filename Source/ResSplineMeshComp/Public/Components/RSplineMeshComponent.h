@@ -29,11 +29,11 @@ class RESSPLINEMESHCOMP_API URSplineMeshComponent : public USplineComponent
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "RSplineMesh")
-	void CreateSplineMeshV(FVector SplineStartLocation, FVector SplineEndLocation, float SingleMeshLength = 50.f, float ZOffset = 0.f, ESplineMeshAxis::Type ForwardAxis = ESplineMeshAxis::X, ECollisionEnabled::Type MeshCollision = ECollisionEnabled::NoCollision, bool IncludeLastChunk = true);
+	void CreateSplineMeshV(FVector SplineStartLocation, FVector SplineEndLocation, float ChunkLength = 50.f, float ZOffset = 0.f, ESplineMeshAxis::Type ForwardAxis = ESplineMeshAxis::X, ECollisionEnabled::Type MeshCollision = ECollisionEnabled::NoCollision, bool IncludeLastChunk = true);
 
 	
 	UFUNCTION(BlueprintCallable, Category = "RSplineMesh")
-	void CreateSplineMeshA(AActor* SplineStartActor, AActor* SplineEndActor, float SingleMeshLength = 50.f, float ZOffset = 0.f, ESplineMeshAxis::Type ForwardAxis = ESplineMeshAxis::X, ECollisionEnabled::Type MeshCollision = ECollisionEnabled::NoCollision, bool IncludeLastChunk = true);
+	void CreateSplineMeshA(AActor* SplineStartActor, AActor* SplineEndActor, float ChunkLength = 50.f, float ZOffset = 0.f, ESplineMeshAxis::Type ForwardAxis = ESplineMeshAxis::X, ECollisionEnabled::Type MeshCollision = ECollisionEnabled::NoCollision, bool IncludeLastChunk = true);
 	
 	
 };

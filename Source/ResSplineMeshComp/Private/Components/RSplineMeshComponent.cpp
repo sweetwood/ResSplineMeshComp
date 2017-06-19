@@ -7,6 +7,7 @@
 
 URSplineMeshComponent::URSplineMeshComponent()
 {
+	// We will use that as a default static mesh on start, you can modify it anywhere.
 	static	ConstructorHelpers::FObjectFinder<UStaticMesh> DWSplineMesh(TEXT("/Game/Meshes/SM_ArrowPlane.SM_ArrowPlane"));
 	SplineStaticMesh = DWSplineMesh.Object;
 }
@@ -37,8 +38,9 @@ USplineMeshComponent * URSplineMeshComponent::AddSplineMesh(UStaticMesh * Spline
 }
 
 
-void URSplineMeshComponent::CreateSplineMeshV(FVector SplineStartLocation, FVector SplineEndLocation, float SingleMeshLength/* = 50.f*/, float ZOffset/* = 0.f*/, ESplineMeshAxis::Type ForwardAxis/* = ESplineMeshAxis::X*/, ECollisionEnabled::Type MeshCollision/* = ECollisionEnabled::NoCollision*/, bool IncludeLastChunk/* = true*/)
+void URSplineMeshComponent::CreateSplineMeshV(FVector SplineStartLocation, FVector SplineEndLocation, float ChunkLength/* = 50.f*/, float ZOffset/* = 0.f*/, ESplineMeshAxis::Type ForwardAxis/* = ESplineMeshAxis::X*/, ECollisionEnabled::Type MeshCollision/* = ECollisionEnabled::NoCollision*/, bool IncludeLastChunk/* = true*/)
 {
+	// If previously we have created SplineMesh components destroy all.
 	if (SplineMeshes.Num() > 0)
 	{
 		for (int i = 0; i < SplineMeshes.Num(); i++)
@@ -54,7 +56,7 @@ void URSplineMeshComponent::CreateSplineMeshV(FVector SplineStartLocation, FVect
 	int32 LastChunk = (IncludeLastChunk) ? 1 : 0;
 
 	float Dividend = (SplineEndLocation - SplineStartLocation).Size();
-	float Divisor = (SingleMeshLength != 0.f) ? SingleMeshLength : 50.f;								// Prevent universe implosion												
+	float Divisor = (ChunkLength == 0.f) ? 50.f : ChunkLength;											// Prevent universe implosion												
 	
 	const float Quotient = Dividend / Divisor;															// <-| Basically the same code of  "Division (whole and remainder)" Blueprint node
 	int32 LastIndex = (Quotient < 0.f ? -1 : 1) * FMath::FloorToInt(FMath::Abs(Quotient)) + LastChunk;	// <-| 
@@ -73,14 +75,14 @@ void URSplineMeshComponent::CreateSplineMeshV(FVector SplineStartLocation, FVect
 		if (i > 0)
 		{
 			int32 StartIndex = GetNumberOfSplinePoints() - 2;
-			int32 EndIndex = GetNumberOfSplinePoints() - 1; // or StartIndex + 1
+			int32 EndIndex = GetNumberOfSplinePoints() - 1;		// or StartIndex + 1
 			SplineMeshes.Add(AddSplineMesh(SplineStaticMesh, StartIndex, EndIndex, ForwardAxis, MeshCollision));
 		}
 	}
 }
 
 
-void URSplineMeshComponent::CreateSplineMeshA(AActor * SplineStartActor, AActor * SplineEndActor, float SingleMeshLength/* = 50.f*/, float ZOffset/* = 0.f*/, ESplineMeshAxis::Type ForwardAxis/* = ESplineMeshAxis::X*/, ECollisionEnabled::Type MeshCollision/* = ECollisionEnabled::NoCollision*/, bool IncludeLastChunk/* = true*/)
+void URSplineMeshComponent::CreateSplineMeshA(AActor * SplineStartActor, AActor * SplineEndActor, float ChunkLength/* = 50.f*/, float ZOffset/* = 0.f*/, ESplineMeshAxis::Type ForwardAxis/* = ESplineMeshAxis::X*/, ECollisionEnabled::Type MeshCollision/* = ECollisionEnabled::NoCollision*/, bool IncludeLastChunk/* = true*/)
 {
-	CreateSplineMeshV(SplineStartActor->GetActorLocation(), SplineEndActor->GetActorLocation(), SingleMeshLength, ZOffset, ForwardAxis, MeshCollision, IncludeLastChunk);
+	CreateSplineMeshV(SplineStartActor->GetActorLocation(), SplineEndActor->GetActorLocation(), ChunkLength, ZOffset, ForwardAxis, MeshCollision, IncludeLastChunk);
 }

@@ -18,7 +18,7 @@ class RESSPLINEMESHCOMP_API URSplineMeshComponent : public USplineComponent
 	
 	URSplineMeshComponent();
 
-	//UPROPERTY(EditAnywhere, Category = "RSplineMesh")
+	UPROPERTY(EditAnywhere, Category = "RSplineMesh")
 	UStaticMesh* SplineStaticMesh;
 
 	UPROPERTY(Transient)
@@ -26,14 +26,14 @@ class RESSPLINEMESHCOMP_API URSplineMeshComponent : public USplineComponent
 
 	USplineMeshComponent* AddSplineMesh(UStaticMesh* SplineMesh, int32 StartPointIndex, int32 EndPointIndex, ESplineMeshAxis::Type ForwardAxis = ESplineMeshAxis::X, ECollisionEnabled::Type MeshCollision = ECollisionEnabled::NoCollision);
 
-
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "RSplineMesh")
-	void CreateSplineMeshV(FVector SplineStartLocation, FVector SplineEndLocation);
+	void CreateSplineMeshV(FVector SplineStartLocation, FVector SplineEndLocation, float SingleMeshLength = 50.f, float ZOffset = 0.f, ESplineMeshAxis::Type ForwardAxis = ESplineMeshAxis::X, ECollisionEnabled::Type MeshCollision = ECollisionEnabled::NoCollision, bool IncludeLastChunk = true);
 
+	
 	UFUNCTION(BlueprintCallable, Category = "RSplineMesh")
-	void CreateSplineMeshA(AActor* SplineStartActor, AActor* SplineEndActor);
+	void CreateSplineMeshA(AActor* SplineStartActor, AActor* SplineEndActor, float SingleMeshLength = 50.f, float ZOffset = 0.f, ESplineMeshAxis::Type ForwardAxis = ESplineMeshAxis::X, ECollisionEnabled::Type MeshCollision = ECollisionEnabled::NoCollision, bool IncludeLastChunk = true);
 	
 	
 };

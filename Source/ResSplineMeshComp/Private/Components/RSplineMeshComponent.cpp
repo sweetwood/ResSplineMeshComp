@@ -1,7 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "ResSplineMeshComp.h"
 #include "RSplineMeshComponent.h"
+#include "ResSplineMeshComp.h"
+
 
 
 URSplineMeshComponent::URSplineMeshComponent()
@@ -17,6 +18,7 @@ USplineMeshComponent * URSplineMeshComponent::AddSplineMesh(UStaticMesh * Spline
 	LocalSplineMeshComp->SetMobility(EComponentMobility::Movable);
 	LocalSplineMeshComp->SetStaticMesh(SplineMesh);
 	LocalSplineMeshComp->SetForwardAxis(ForwardAxis);
+	LocalSplineMeshComp->SetCollisionEnabled(MeshCollision);
 	LocalSplineMeshComp->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
 
 	FVector LocalStartLocation;
@@ -28,14 +30,14 @@ USplineMeshComponent * URSplineMeshComponent::AddSplineMesh(UStaticMesh * Spline
 	GetLocationAndTangentAtSplinePoint(EndPointIndex, LocalEndLocation, LocalEndTangent, ESplineCoordinateSpace::Local);
 
 	LocalSplineMeshComp->SetStartAndEnd(LocalStartLocation, LocalStartTangent, LocalEndLocation, LocalEndTangent);
-	LocalSplineMeshComp->SetCollisionEnabled(MeshCollision);
+	
 	LocalSplineMeshComp->RegisterComponent();
 
 	return LocalSplineMeshComp;
 }
 
 
-void URSplineMeshComponent::CreateSplineMeshV(FVector SplineStartLocation, FVector SplineEndLocation)
+void URSplineMeshComponent::CreateSplineMeshV(FVector SplineStartLocation, FVector SplineEndLocation, float SingleMeshLength/* = 50.f*/, float ZOffset/* = 0.f*/, ESplineMeshAxis::Type ForwardAxis/* = ESplineMeshAxis::X*/, ECollisionEnabled::Type MeshCollision/* = ECollisionEnabled::NoCollision*/, bool IncludeLastChunk/* = true*/)
 {
 	if (SplineMeshes.Num() > 0)
 	{
@@ -44,22 +46,27 @@ void URSplineMeshComponent::CreateSplineMeshV(FVector SplineStartLocation, FVect
 			SplineMeshes[i]->DestroyComponent();
 		}
 
-		SplineMeshes.Empty();
+		SplineMeshes.Empty();																			// Probably useless but i prefer to be sure that the array is clean
 	}
 
-	ClearSplinePoints();
+	ClearSplinePoints();																				// We remove all the Spline points to start add these from scratch
+
+	int32 LastChunk = (IncludeLastChunk) ? 1 : 0;
 
 	float Dividend = (SplineEndLocation - SplineStartLocation).Size();
-	float Divisor = 50.f;																			// Never set the Divisor equal 0.f or universe will implode
-	const float Quotient = Dividend / Divisor;														// <-|
-	int32 LastIndex = (Quotient < 0.f ? -1 : 1) * FMath::FloorToInt(FMath::Abs(Quotient));			// <-| Basically the same code of  "Division (whole and remainder) Blueprint node
-	float Remainder = FMath::Fmod(Dividend, Divisor);												// <-| (UKismetMathLibrary::FMod)
-	float Offset = Remainder / LastIndex;
-
+	float Divisor = (SingleMeshLength != 0.f) ? SingleMeshLength : 50.f;								// Prevent universe implosion												
+	
+	const float Quotient = Dividend / Divisor;															// <-| Basically the same code of  "Division (whole and remainder)" Blueprint node
+	int32 LastIndex = (Quotient < 0.f ? -1 : 1) * FMath::FloorToInt(FMath::Abs(Quotient)) + LastChunk;	// <-| 
+	float Remainder = FMath::Fmod(Dividend, Divisor);													// <-| (UKismetMathLibrary::FMod)
+	
+	float Offset = Remainder / LastIndex;	
+	
 	for (int i = 0; i < LastIndex; i++)
 	{
 		FVector UnitDirection = (SplineEndLocation - SplineStartLocation).GetSafeNormal();
 		FVector NewPointPosition = SplineStartLocation + (UnitDirection * (i * (Divisor + Offset)));
+		NewPointPosition.Z += ZOffset;
 
 		AddSplinePointAtIndex(NewPointPosition, i, ESplineCoordinateSpace::World);
 
@@ -67,13 +74,13 @@ void URSplineMeshComponent::CreateSplineMeshV(FVector SplineStartLocation, FVect
 		{
 			int32 StartIndex = GetNumberOfSplinePoints() - 2;
 			int32 EndIndex = GetNumberOfSplinePoints() - 1; // or StartIndex + 1
-			SplineMeshes.Add(AddSplineMesh(SplineStaticMesh, StartIndex, EndIndex));
+			SplineMeshes.Add(AddSplineMesh(SplineStaticMesh, StartIndex, EndIndex, ForwardAxis, MeshCollision));
 		}
 	}
 }
 
 
-void URSplineMeshComponent::CreateSplineMeshA(AActor * SplineStartActor, AActor * SplineEndActor)
+void URSplineMeshComponent::CreateSplineMeshA(AActor * SplineStartActor, AActor * SplineEndActor, float SingleMeshLength/* = 50.f*/, float ZOffset/* = 0.f*/, ESplineMeshAxis::Type ForwardAxis/* = ESplineMeshAxis::X*/, ECollisionEnabled::Type MeshCollision/* = ECollisionEnabled::NoCollision*/, bool IncludeLastChunk/* = true*/)
 {
-	CreateSplineMeshV(SplineStartActor->GetActorLocation(), SplineEndActor->GetActorLocation());
+	CreateSplineMeshV(SplineStartActor->GetActorLocation(), SplineEndActor->GetActorLocation(), SingleMeshLength, ZOffset, ForwardAxis, MeshCollision, IncludeLastChunk);
 }

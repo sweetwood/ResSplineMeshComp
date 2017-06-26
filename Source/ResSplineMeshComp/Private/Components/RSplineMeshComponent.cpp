@@ -2,6 +2,7 @@
 
 #include "RSplineMeshComponent.h"
 #include "ResSplineMeshComp.h"
+#include "HierarchicalInstancedStaticMeshComponent.h"
 
 
 
@@ -9,7 +10,7 @@ URSplineMeshComponent::URSplineMeshComponent()
 {
 	// We will use that as a default static mesh on start, you can modify it anywhere.
 	static	ConstructorHelpers::FObjectFinder<UStaticMesh> DWSplineMesh(TEXT("/Game/Meshes/SM_ArrowPlane.SM_ArrowPlane"));
-	SplineStaticMesh = DWSplineMesh.Object;
+	SplineStaticMesh = DWSplineMesh.Object;		
 }
 
 

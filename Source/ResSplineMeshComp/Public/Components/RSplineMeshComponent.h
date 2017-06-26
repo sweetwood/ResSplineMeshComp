@@ -19,7 +19,7 @@ class RESSPLINEMESHCOMP_API URSplineMeshComponent : public USplineComponent
 	URSplineMeshComponent();
 
 	UPROPERTY(EditAnywhere, Category = "RSplineMesh")
-	UStaticMesh* SplineStaticMesh;
+	UStaticMesh* SplineStaticMesh;	
 
 	UPROPERTY(Transient)
 	TArray<USplineMeshComponent*> SplineMeshes;

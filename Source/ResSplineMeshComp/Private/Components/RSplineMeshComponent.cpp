@@ -2,8 +2,6 @@
 
 #include "RSplineMeshComponent.h"
 #include "ResSplineMeshComp.h"
-#include "HierarchicalInstancedStaticMeshComponent.h"
-
 
 
 URSplineMeshComponent::URSplineMeshComponent()
